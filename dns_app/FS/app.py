@@ -36,11 +36,9 @@ def register():
         return "Missing required fields", 400
 
     message = (
-        f"TYPE=A\n"
-        f"NAME={hostname}\n"
-        f"VALUE={ip}\n"
-        f"TTL=10"
-    )
+    f"TYPE=A\n"
+    f"NAME={hostname} VALUE={ip} TTL=10\n"
+)
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.sendto(message.encode(), (as_ip, int(as_port)))

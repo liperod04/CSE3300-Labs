@@ -35,6 +35,17 @@ def find_record(name):
     return None
 
 
+def parse_message(message):
+    fields = {}
+
+    for item in message.replace("\n", " ").split():
+        if "=" in item:
+            key, value = item.split("=", 1)
+            fields[key] = value
+
+    return fields
+
+
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 server_socket.bind((HOST, PORT))
 
@@ -44,14 +55,8 @@ while True:
     data, address = server_socket.recvfrom(1024)
     message = data.decode().strip()
 
-    fields = {}
+    fields = parse_message(message)
 
-    for line in message.splitlines():
-        if "=" in line:
-            key, value = line.split("=", 1)
-            fields[key] = value
-
-    # Registration message
     if "VALUE" in fields:
         save_record(
             fields.get("NAME"),
@@ -68,9 +73,7 @@ while True:
         if record:
             response = (
                 f"TYPE={record['TYPE']}\n"
-                f"NAME={record['NAME']}\n"
-                f"VALUE={record['VALUE']}\n"
-                f"TTL={record['TTL']}"
+                f"NAME={record['NAME']} VALUE={record['VALUE']} TTL={record['TTL']}\n"
             )
         else:
             response = "Record not found"

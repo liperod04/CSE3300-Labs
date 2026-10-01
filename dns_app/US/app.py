@@ -39,10 +39,10 @@ def get_fibonacci():
         return "DNS record not found", 400
 
     fields = {}
-
-    for line in dns_response.splitlines():
-        if "=" in line:
-            key, value = line.split("=", 1)
+    
+    for item in dns_response.replace("\n", " ").split():
+        if "=" in item:
+            key, value = item.split("=", 1)
             fields[key] = value
 
     fs_ip = fields.get("VALUE")
